@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal de Denúncias</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #003b8e;
+      --secondary: #0066cc;
+      --accent: #0073e6;
+      --light: #e6eefc;
+      --dark: #222;
+      --success: #28a745;
+      --warning: #ffc107;
+      --danger: #dc3545;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to bottom, var(--light), #ffffff);
+      color: var(--dark);
+      line-height: 1.6;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      text-align: center;
+      padding: 50px 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+      background-size: cover;
+    }
+
+    header h1 {
+      margin-bottom: 10px;
+      font-size: 2.5em;
+      position: relative;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    header p {
+      position: relative;
+      font-size: 1.2em;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    nav {
+      background-color: #002e6d;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 12px;
+      gap: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 10px 18px;
+      border-radius: 5px;
+      transition: all 0.3s;
+      background: #0046a8;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    nav a:hover, nav a.active {
+      background-color: var(--accent);
+      box-shadow: 0 0 8px rgba(255,255,255,0.5);
+      transform: translateY(-2px);
+    }
+
+    main {
+      max-width: 950px;
+      margin: 40px auto;
+      padding: 25px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0px 3px 10px rgba(0,0,0,0.1);
+    }
+
+    section {
+      display: none;
+      animation: fade 0.5s ease-in-out;
+    }
+
+    section.active {
+      display: block;
+    }
+
+    @keyframes fade {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      color: var(--primary);
+      border-left: 6px solid var(--accent);
+      padding-left: 10px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .relato {
+      background: #f0f6ff;
+      border-left: 4px solid var(--accent);
+      padding: 15px;
+      border-radius: 8px;
+      margin: 15px 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      transition: transform 0.3s;
+    }
+
+    .relato:hover {
+      transform: translateX(5px);
+    }
+
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    ul li {
+      padding: 8px 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    ul li::before {
+      content: "💡";
+      font-size: 1.2em;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    label {
+      font-weight: bold;
+      color: var(--primary);
+    }
+
+    input, select, textarea {
+      padding: 12px;
+      border: 1px solid #bbb;
+      border-radius: 6px;
+      font-size: 1rem;
+      background-color: #f8faff;
+      transition: all 0.3s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 5px rgba(0,115,230,0.4);
+      transform: translateY(-2px);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px;
+      font-size: 1.1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s;
+      width: 220px;
+      align-self: center;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    button:hover {
+      background-color: var(--secondary);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      transform: translateY(-2px);
+    }
+
+    footer {
+      background: var(--primary);
+      color: white;
+      text-align: center;
+      padding: 20px;
+      margin-top: 40px;
+      font-size: 0.95em;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    }
+
+    /* Novos elementos */
+    .stats-container {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 8px;
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+      flex: 1;
+      min-width: 150px;
+      transition: transform 0.3s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .stat-number {
+      font-size: 2em;
+      font-weight: bold;
+      color: var(--primary);
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 0.9em;
+      color: #666;
+    }
+
+    .emergency-banner {
+      background: linear-gradient(135deg, var(--danger), #ff6b6b);
+      color: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 20px 0;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7); }
+      70% { box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+    }
+
+    .emergency-contacts {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .contact-card {
+      background: white;
+      border-radius: 8px;
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+      transition: all 0.3s;
+    }
+
+    .contact-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .contact-icon {
+      font-size: 2em;
+      margin-bottom: 10px;
+      color: var(--primary);
+    }
+
+    .progress-bar {
+      height: 5px;
+      background: #e0e0e0;
+      border-radius: 5px;
+      margin: 20px 0;
+      overflow: hidden;
+    }
+
+    .progress {
+      height: 100%;
+      background: var(--success);
+      width: 0%;
+      transition: width 0.5s;
+    }
+
+    .notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--success);
+      color: white;
+      padding: 15px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      transform: translateX(150%);
+      transition: transform 0.5s;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .notification.show {
+      transform: translateX(0);
+    }
+
+    .notification.error {
+      background: var(--danger);
+    }
+
+    .notification.warning {
+      background: var(--warning);
+      color: var(--dark);
+    }
+
+    .back-to-top {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--primary);
+      color: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 999;
+    }
+
+    .back-to-top.show {
+      opacity: 1;
+    }
+
+    .back-to-top:hover {
+      background: var(--secondary);
+      transform: translateY(-3px);
+    }
+
+    .resources-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    .resource-card {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+      transition: all 0.3s;
+      border-top: 4px solid var(--accent);
+    }
+
+    .resource-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .resource-icon {
+      font-size: 2em;
+      color: var(--primary);
+      margin-bottom: 15px;
+    }
+
+    @media (max-width: 600px) {
+      nav {
+        flex-direction: column;
+      }
+      nav a {
+        text-align: center;
+        width: 100%;
+      }
+      .stats-container, .emergency-contacts, .resources-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Portal de Denúncias</h1>
+    <p>Um espaço seguro, colorido e ético para conscientização e ação.</p>
+  </header>
+
+  <nav>
+    <a href="#" class="active" data-aba="denuncie"><i class="fas fa-bullhorn"></i> Denuncie Aqui</a>
+    <a href="#" data-aba="dicas"><i class="fas fa-lightbulb"></i> Dicas e Instruções</a>
+    <a href="#" data-aba="noticias"><i class="fas fa-newspaper"></i> Notícias</a>
+    <a href="#" data-aba="recursos"><i class="fas fa-hands-helping"></i> Recursos</a>
+  </nav>
+
+  <main>
+
+    <!-- ====== ABA DENUNCIE AQUI ====== -->
+    <section id="denuncie" class="active">
+      <h2><i class="fas fa-bullhorn"></i> Denuncie Aqui</h2>
+      <p>Preencha o formulário abaixo com o máximo de detalhes possíveis. Suas informações serão tratadas com total sigilo e respeito.</p>
+
+      <div class="emergency-banner">
+        <i class="fas fa-exclamation-triangle"></i>
+        <strong>EMERGÊNCIA?</strong> Se você está em perigo imediato, ligue para a polícia (190) antes de preencher este formulário.
+      </div>
+
+      <div class="progress-bar">
+        <div class="progress" id="form-progress"></div>
+      </div>
+
+      <form id="formDenuncia">
+        <div class="form-group">
+          <label for="tipo">Tipo de Ocorrência:</label>
+          <select id="tipo" required>
+            <option value="">Selecione...</option>
+            <option>Abuso Físico</option>
+            <option>Abuso Psicológico</option>
+            <option>Assédio</option>
+            <option>Discriminação</option>
+            <option>Violência Doméstica</option>
+            <option>Bullying</option>
+            <option>Outros</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="local">Local do Ocorrido:</label>
+          <input type="text" id="local" placeholder="Ex: escola, empresa, rua, bairro..." required>
+        </div>
+
+        <div class="form-group">
+          <label for="data">Data aproximada:</label>
+          <input type="date" id="data">
+        </div>
+
+        <div class="form-group">
+          <label for="descricao">Descreva o ocorrido:</label>
+          <textarea id="descricao" placeholder="Relate os detalhes do caso de forma clara e objetiva..." required></textarea>
+          <small id="char-count">0/1000 caracteres</small>
+        </div>
+
+        <div class="form-group">
+          <label for="contato">E-mail ou telefone para contato (opcional):</label>
+          <input type="text" id="contato" placeholder="exemplo@email.com ou (xx) xxxxx-xxxx">
+        </div>
+
+        <button type="submit"><i class="fas fa-paper-plane"></i> Enviar Relato</button>
+      </form>
+    </section>
+
+    <!-- ====== ABA DICAS ====== -->
+    <section id="dicas">
+      <h2><i class="fas fa-lightbulb"></i> Dicas e Instruções</h2>
+      <p>Em situações de abuso ou suspeita, seguir algumas orientações pode salvar vidas. Veja abaixo instruções baseadas em fontes confiáveis e especialistas:</p>
+
+      <div class="stats-container">
+        <div class="stat-card">
+          <span class="stat-number" id="stat-denuncias">1.234</span>
+          <span class="stat-label">Denúncias Recebidas</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number" id="stat-resolvidos">892</span>
+          <span class="stat-label">Casos Resolvidos</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-number" id="stat-tempo">24h</span>
+          <span class="stat-label">Tempo Médio de Resposta</span>
+        </div>
+      </div>
+
+      <ul>
+        <li><strong>Mantenha a calma:</strong> Respire fundo e procure se afastar de qualquer situação de risco.</li>
+        <li><strong>Procure abrigo seguro:</strong> Dirija-se a um local com pessoas de confiança ou autoridades.</li>
+        <li><strong>Registre provas:</strong> Guarde mensagens, prints, e-mails e evidências, sem alterar ou apagar nada.</li>
+        <li><strong>Não confronte o agressor:</strong> Evite colocar-se em perigo direto. Busque apoio e segurança.</li>
+        <li><strong>Contate as autoridades:</strong> Ligue para a polícia (190), Central de Atendimento à Mulher (180) ou Direitos Humanos (100).</li>
+        <li><strong>Converse com profissionais:</strong> Psicólogos e assistentes sociais podem ajudar a lidar com traumas e orientar próximos passos.</li>
+        <li><strong>Denuncie sempre:</strong> O silêncio protege o agressor. A denúncia protege você e outras pessoas.</li>
+      </ul>
+
+      <h3 style="margin-top: 30px;">Contatos de Emergência</h3>
+      <div class="emergency-contacts">
+        <div class="contact-card">
+          <div class="contact-icon"><i class="fas fa-shield-alt"></i></div>
+          <h4>Polícia</h4>
+          <p>190</p>
+        </div>
+        <div class="contact-card">
+          <div class="contact-icon"><i class="fas fa-female"></i></div>
+          <h4>Central da Mulher</h4>
+          <p>180</p>
+        </div>
+        <div class="contact-card">
+          <div class="contact-icon"><i class="fas fa-child"></i></div>
+          <h4>Direitos Humanos</h4>
+          <p>100</p>
+        </div>
+        <div class="contact-card">
+          <div class="contact-icon"><i class="fas fa-ambulance"></i></div>
+          <h4>Samu</h4>
+          <p>192</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== ABA NOTÍCIAS ====== -->
+    <section id="noticias">
+      <h2><i class="fas fa-newspaper"></i> Notícias e Relatos Regionais</h2>
+      <p>Veja relatos fictícios e acontecimentos simulados baseados em situações reais, para fins de conscientização:</p>
+
+      <div class="relato">
+        <strong>🚨 Caso 1:</strong> Moradores denunciaram comportamentos suspeitos em uma praça. Após investigação, medidas preventivas foram tomadas pelas autoridades.
+      </div>
+
+      <div class="relato">
+        <strong>👩‍💼 Caso 2:</strong> Uma empresa implementou treinamentos de ética após relatos de assédio no ambiente corporativo.
+      </div>
+
+      <div class="relato">
+        <strong>🏫 Caso 3:</strong> Estudantes criaram um grupo de apoio e escuta ativa para combater o bullying em uma escola pública.
+      </div>
+
+      <div class="relato">
+        <strong>🏘️ Caso 4:</strong> Um bairro inteiro se mobilizou para apoiar vítimas de violência doméstica, criando uma rede de segurança comunitária.
+      </div>
+    </section>
+
+    <!-- ====== NOVA ABA RECURSOS ====== -->
+    <section id="recursos">
+      <h2><i class="fas fa-hands-helping"></i> Recursos de Apoio</h2>
+      <p>Encontre aqui organizações e serviços que podem oferecer suporte em situações difíceis:</p>
+
+      <div class="resources-grid">
+        <div class="resource-card">
+          <div class="resource-icon"><i class="fas fa-heart"></i></div>
+          <h3>Apoio Psicológico</h3>
+          <p>Atendimento gratuito com psicólogos especializados em traumas e violência.</p>
+          <button style="width: 100%; margin-top: 10px;">Saiba Mais</button>
+        </div>
+        <div class="resource-card">
+          <div class="resource-icon"><i class="fas fa-balance-scale"></i></div>
+          <h3>Assessoria Jurídica</h3>
+          <p>Orientação legal gratuita para vítimas de violência e discriminação.</p>
+          <button style="width: 100%; margin-top: 10px;">Saiba Mais</button>
+        </div>
+        <div class="resource-card">
+          <div class="resource-icon"><i class="fas fa-home"></i></div>
+          <h3>Abrigos Temporários</h3>
+          <p>Locais seguros para pessoas em situação de risco imediato.</p>
+          <button style="width: 100%; margin-top: 10px;">Saiba Mais</button>
+        </div>
+        <div class="resource-card">
+          <div class="resource-icon"><i class="fas fa-users"></i></div>
+          <h3>Grupos de Apoio</h3>
+          <p>Encontros regulares para compartilhar experiências e receber apoio.</p>
+          <button style="width: 100%; margin-top: 10px;">Saiba Mais</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>© 2025 Portal de Denúncias | Ética, Sigilo e Conscientização</p>
+    <p style="margin-top: 10px; font-size: 0.8em;">Lembre-se: sua segurança é sempre a prioridade.</p>
+  </footer>
+
+  <div class="back-to-top" id="backToTop">
+    <i class="fas fa-arrow-up"></i>
+  </div>
+
+  <div class="notification" id="notification">
+    <i class="fas fa-check-circle"></i>
+    <span id="notification-text">Sua denúncia foi enviada com sucesso!</span>
+  </div>
+
+  <script>
+    // Controle das abas
+    const links = document.querySelectorAll("nav a");
+    const sections = document.querySelectorAll("section");
+
+    links.forEach(link => {
+      link.addEventListener("click", e => {
+        e.preventDefault();
+        links.forEach(a => a.classList.remove("active"));
+        link.classList.add("active");
+
+        const aba = link.getAttribute("data-aba");
+        sections.forEach(sec => sec.classList.remove("active"));
+        document.getElementById(aba).classList.add("active");
+        
+        // Atualizar estatísticas quando a aba de dicas for aberta
+        if (aba === 'dicas') {
+          updateStats();
+        }
+      });
+    });
+
+    // Contador de caracteres para a descrição
+    const descricao = document.getElementById('descricao');
+    const charCount = document.getElementById('char-count');
+    
+    descricao.addEventListener('input', function() {
+      const count = this.value.length;
+      charCount.textContent = `${count}/1000 caracteres`;
+      
+      // Atualizar barra de progresso do formulário
+      updateFormProgress();
+    });
+
+    // Atualizar barra de progresso do formulário
+    function updateFormProgress() {
+      const form = document.getElementById('formDenuncia');
+      const inputs = form.querySelectorAll('input, select, textarea');
+      const progressBar = document.getElementById('form-progress');
+      
+      let filled = 0;
+      inputs.forEach(input => {
+        if (input.value.trim() !== '' && input.id !== 'contato') {
+          filled++;
+        }
+      });
+      
+      // Considerar a descrição como mais importante (peso duplo)
+      if (descricao.value.trim() !== '') {
+        filled++;
+      }
+      
+      const progress = (filled / (inputs.length + 1)) * 100;
+      progressBar.style.width = `${progress}%`;
+    }
+
+    // Adicionar eventos para atualizar a barra de progresso
+    document.querySelectorAll('#formDenuncia input, #formDenuncia select').forEach(element => {
+      element.addEventListener('input', updateFormProgress);
+      element.addEventListener('change', updateFormProgress);
+    });
+
+    // Envio do formulário com validação
+    document.getElementById("formDenuncia").addEventListener("submit", e => {
+      e.preventDefault();
+      
+      // Validação básica
+      const tipo = document.getElementById('tipo').value;
+      const local = document.getElementById('local').value;
+      const descricao = document.getElementById('descricao').value;
+      
+      if (!tipo || !local || !descricao) {
+        showNotification('Por favor, preencha todos os campos obrigatórios.', 'error');
+        return;
+      }
+      
+      if (descricao.length < 10) {
+        showNotification('A descrição precisa ter pelo menos 10 caracteres.', 'warning');
+        return;
+      }
+      
+      // Simular envio
+      showNotification('✅ Sua denúncia foi registrada com sucesso. Obrigado por contribuir para uma sociedade mais segura.');
+      
+      // Resetar formulário
+      e.target.reset();
+      updateFormProgress();
+      document.getElementById('char-count').textContent = '0/1000 caracteres';
+      
+      // Atualizar estatísticas
+      updateStats();
+    });
+
+    // Mostrar notificação
+    function showNotification(message, type = 'success') {
+      const notification = document.getElementById('notification');
+      const notificationText = document.getElementById('notification-text');
+      
+      notificationText.textContent = message;
+      notification.className = 'notification';
+      notification.classList.add(type, 'show');
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 5000);
+    }
+
+    // Botão voltar ao topo
+    const backToTop = document.getElementById('backToTop');
+    
+    window.addEventListener('scroll', () => {
+      if (window.pageYOffset > 300) {
+        backToTop.classList.add('show');
+      } else {
+        backToTop.classList.remove('show');
+      }
+    });
+    
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+
+    // Atualizar estatísticas (simulação)
+    function updateStats() {
+      // Simular aumento nas estatísticas
+      const denuncias = document.getElementById('stat-denuncias');
+      const resolvidos = document.getElementById('stat-resolvidos');
+      
+      let currentDenuncias = parseInt(denuncias.textContent.replace('.', ''));
+      let currentResolvidos = parseInt(resolvidos.textContent.replace('.', ''));
+      
+      // Aumentar em 1 a cada vez que a página é visitada (apenas para demonstração)
+      currentDenuncias += 1;
+      currentResolvidos += Math.floor(Math.random() * 2); // 0 ou 1
+      
+      denuncias.textContent = currentDenuncias.toLocaleString('pt-BR');
+      resolvidos.textContent = currentResolvidos.toLocaleString('pt-BR');
+    }
+
+    // Inicializar barra de progresso
+    updateFormProgress();
+  </script>
+</body>
+</html>
